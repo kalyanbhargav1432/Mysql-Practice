@@ -1,0 +1,266 @@
+
+mysql> show databases;
++---------------------------+
+| Database                  |
++---------------------------+
+| addressbook_normalization |
+| addressbook_service       |
+| employee_payroll          |
+| information_schema        |
+| mysql                     |
+| payroll_service           |
+| performance_schema        |
+| sakila                    |
+| sys                       |
+| world                     |
++---------------------------+
+10 rows in set (0.00 sec)
+----------------------------------------------------
+** Create Database **
+======================
+mysql> create database employee_database;
+Query OK, 1 row affected (0.11 sec)
+
+mysql> show databases;
++---------------------------+
+| Database                  |
++---------------------------+
+| addressbook_normalization |
+| addressbook_service       |
+| employee_database         |
+| employee_payroll          |
+| information_schema        |
+| mysql                     |
+| payroll_service           |
+| performance_schema        |
+| sakila                    |
+| sys                       |
+| world                     |
++---------------------------+
+11 rows in set (0.00 sec)
+---------------------------------------------------------------
+** Create Table **
+======================
+mysql> create table employee_table(
+    -> firstname varchar(150) NOT NULL,
+    -> lastname varchar(150) NOT NULL,
+    -> state varchar(150) NOT NULL,
+    -> mobilenumber varchar(20) NOT NULL,
+    -> email varchar(150) NOT NULL
+    -> );
+Query OK, 0 rows affected (1.51 sec)
+
+mysql> desc employee_table;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| firstname    | varchar(150) | NO   |     | NULL    |       |
+| lastname     | varchar(150) | NO   |     | NULL    |       |
+| state        | varchar(150) | NO   |     | NULL    |       |
+| mobilenumber | varchar(20)  | NO   |     | NULL    |       |
+| email        | varchar(150) | NO   |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+5 rows in set (0.12 sec)
+-----------------------------------------------------------------------
+** By Using "Alter" "Add" extra column **
+======================================
+mysql> alter table employee_table add id int after lastname;
+Query OK, 0 rows affected (2.53 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employee_table;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| firstname    | varchar(150) | NO   |     | NULL    |       |
+| lastname     | varchar(150) | NO   |     | NULL    |       |
+| id           | int          | YES  |     | NULL    |       |
+| state        | varchar(150) | NO   |     | NULL    |       |
+| mobilenumber | varchar(20)  | NO   |     | NULL    |       |
+| email        | varchar(150) | NO   |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+6 rows in set (0.04 sec)
+-----------------------------------------------------------------------------
+** By Using "Alter" "Change"  column  Name Id to City **
+======================================================
+mysql> alter table employee_table change id city varchar(50);
+Query OK, 0 rows affected (3.17 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employee_table;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| firstname    | varchar(150) | NO   |     | NULL    |       |
+| lastname     | varchar(150) | NO   |     | NULL    |       |
+| city         | varchar(50)  | YES  |     | NULL    |       |
+| state        | varchar(150) | NO   |     | NULL    |       |
+| mobilenumber | varchar(20)  | NO   |     | NULL    |       |
+| email        | varchar(150) | NO   |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+------------------------------------------------------------------------
+** By Using "Drop" Delete the  Column:City **
+==============================================
+mysql> alter table employee_table drop city;
+Query OK, 0 rows affected (1.80 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employee_table;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| firstname    | varchar(150) | NO   |     | NULL    |       |
+| lastname     | varchar(150) | NO   |     | NULL    |       |
+| state        | varchar(150) | NO   |     | NULL    |       |
+| mobilenumber | varchar(20)  | NO   |     | NULL    |       |
+| email        | varchar(150) | NO   |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+-------------------------------------------------------------------------
+mysql> show tables;
++-----------------------------+
+| Tables_in_employee_database |
++-----------------------------+
+| employee_table              |
++-----------------------------+
+1 row in set (0.00 sec)
+
+** By Using "Rename" to Change Table Name **
+============================================
+
+mysql> rename table employee_table to employee_details;
+Query OK, 0 rows affected (0.63 sec)
+
+mysql> show tables;
++-----------------------------+
+| Tables_in_employee_database |
++-----------------------------+
+| employee_details            |
++-----------------------------+
+1 row in set (0.04 sec)
+-------------------------------------------------------------------------
+** By Using "Insert" to Add details for each Column **
+==========================================================
+mysql> insert into employee_details ( firstname, lastname, state, mobilenumber,email) values
+    ->  ( 'kalyan', 'tanniru', 'Andhrapradesh','9182169100', 'tannirukalyan1432@gmail.com');
+Query OK, 1 row affected (0.43 sec)
+mysql> select * from employee_details;
++-----------+----------+---------------+--------------+-----------------------------+
+| firstname | lastname | state         | mobilenumber | email                       |
++-----------+----------+---------------+--------------+-----------------------------+
+| kalyan    | tanniru  | Andhrapradesh | 9182169100   | tannirukalyan1432@gmail.com |
++-----------+----------+---------------+--------------+-----------------------------+
+1 row in set (0.00 sec)
+
+mysql> insert into employee_details ( firstname, lastname, state, mobilenumber,email) values
+    ->  ( 'Bhargav', 'tanniru', 'Andhrapradesh','9642502811', 'tannirukalyan1234@gmail.com');
+Query OK, 1 row affected (0.13 sec)
+
+mysql> select * from employee_details;
++-----------+----------+---------------+--------------+-----------------------------+
+| firstname | lastname | state         | mobilenumber | email                       |
++-----------+----------+---------------+--------------+-----------------------------+
+| kalyan    | tanniru  | Andhrapradesh | 9182169100   | tannirukalyan1432@gmail.com |
+| Bhargav   | tanniru  | Andhrapradesh | 9642502811   | tannirukalyan1234@gmail.com |
++-----------+----------+---------------+--------------+-----------------------------+
+2 rows in set (0.00 sec)
+------------------------------------------------------------------------------------------
+** By Using "Update" we can update details for selected column **
+===================================================================
+
+mysql> update employee_details set state = 'Telangana' where firstname = 'Bhargav';
+Query OK, 1 row affected (0.13 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee_details;
++-----------+----------+---------------+--------------+-----------------------------+
+| firstname | lastname | state         | mobilenumber | email                       |
++-----------+----------+---------------+--------------+-----------------------------+
+| kalyan    | tanniru  | Andhrapradesh | 9182169100   | tannirukalyan1432@gmail.com |
+| Bhargav   | tanniru  | Telangana     | 9642502811   | tannirukalyan1234@gmail.com |
++-----------+----------+---------------+--------------+-----------------------------+
+2 rows in set (0.00 sec)
+--------------------------------------------------------------------------------------------------------------
+mysql> CREATE TABLE customer (
+    ->     Id int PRIMARY KEY NOT NULL,
+    ->     Name varchar(45) NOT NULL,
+    ->     Product varchar(45) DEFAULT NULL,
+    ->     Country varchar(25) DEFAULT NULL,
+    ->     Year int NOT NULL
+    -> );
+Query OK, 0 rows affected (1.33 sec)
+
+mysql> INSERT INTO customer (Id, Name, Product, Country, Year)values
+    -> (1,'kalyan','laptop','India',2022),(2,'Bhargav','Mobile','USA',2021),(3,'king','Bike','Dubai',2020);
+Query OK, 3 rows affected (0.22 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM customer;
++----+---------+---------+---------+------+
+| Id | Name    | Product | Country | Year |
++----+---------+---------+---------+------+
+|  1 | kalyan  | laptop  | India   | 2022 |
+|  2 | Bhargav | Mobile  | USA     | 2021 |
+|  3 | king    | Bike    | Dubai   | 2020 |
++----+---------+---------+---------+------+
+3 rows in set (0.00 sec)
+
+** By Using "Truncate to delete table**
+======================================
+mysql>  TRUNCATE TABLE customer;
+Query OK, 0 rows affected (1.48 sec)
+
+mysql> SELECT * FROM customer;
+Empty set (0.00 sec)
+
+mysql> show tables;
++-----------------------------+
+| Tables_in_employee_database |
++-----------------------------+
+| customer                    |
+| employee_details            |
++-----------------------------+
+2 rows in set (0.04 sec)
+--------------------------------------------------------------------------
+** Create Table Persons **
+=======================================
+mysql> CREATE TABLE Persons (
+    ->     ID int NOT NULL,
+    ->     Name varchar(45) NOT NULL,
+    ->     Age int CHECK (Age>=18)
+    -> );
+Query OK, 0 rows affected (2.10 sec)
+
+** By Using "Insert" Adding details(Age is above 18 so condition is passed)**
+=============================================================================
+mysql> INSERT INTO Persons(Id, Name, Age)
+    -> VALUES (1,'Robert', 28), (2, 'Joseph', 35), (3, 'Peter', 40);
+Query OK, 3 rows affected (0.21 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++-----------------------------+
+| Tables_in_employee_database |
++-----------------------------+
+| customer                    |
+| employee_details            |
+| persons                     |
++-----------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from persons;
++----+--------+------+
+| ID | Name   | Age  |
++----+--------+------+
+|  1 | Robert |   28 |
+|  2 | Joseph |   35 |
+|  3 | Peter  |   40 |
++----+--------+------+
+3 rows in set (0.00 sec)
+-----------------------------------------------------------------------
+** By Using "Insert" Adding details(Age is below 18 so condition is failed)**
+=============================================================================
+mysql> INSERT INTO Persons(Id, Name, Age)
+    -> VALUES (1,'Robert', 15), (2, 'Bhargav', 23), (3, 'kalyan', 24);
+ERROR 3819 (HY000): Check constraint 'persons_chk_1' is violated.

@@ -1,0 +1,308 @@
+mysql> show databases;
++---------------------------+
+| Database                  |
++---------------------------+
+| addressbook_normalization |
+| addressbook_service       |
+| employee_database         |
+| employee_payroll          |
+| information_schema        |
+| mysql                     |
+| payroll_service           |
+| performance_schema        |
+| sakila                    |
+| sys                       |
+| world                     |
++---------------------------+
+11 rows in set (0.08 sec)
+
+mysql> use employee_database;
+Database changed
+
+mysql> show tables;
++-----------------------------+
+| Tables_in_employee_database |
++-----------------------------+
+| customer                    |
+| employee_details            |
++-----------------------------+
+2 rows in set (0.04 sec)
+---------------------------------------------------------------
+** Create Table **
+======================
+
+mysql> CREATE TABLE Persons (
+    -> ID int NOT NULL,
+    -> Name varchar(45) NOT NULL,
+    -> Age int,
+    -> City varchar(100) DEFAULT 'INDIA'
+    -> );
+Query OK, 0 rows affected (0.98 sec)
+
+mysql> INSERT INTO Persons(Id, Name, Age, City)
+    -> VALUES (1,'kalyan', 24, 'USA'),
+    -> (2, 'Bhargav', 25, 'California'),
+    -> (3, 'Peter', 40, 'Alaska')
+    -> ;
+Query OK, 3 rows affected (0.26 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from persons;
++----+---------+------+------------+
+| ID | Name    | Age  | City       |
++----+---------+------+------------+
+|  1 | kalyan  |   24 | USA        |
+|  2 | Bhargav |   25 | California |
+|  3 | Peter   |   40 | Alaska     |
++----+---------+------+------------+
+3 rows in set (0.00 sec)
+---------------------------------------------------------------
+** Add DEFAULT Constraint **
+============================
+mysql> INSERT INTO Persons(Id, Name, Age) VALUES (4,'john', 15);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> select * from persons;
++----+---------+------+------------+
+| ID | Name    | Age  | City       |
++----+---------+------+------------+
+|  1 | kalyan  |   24 | USA        |
+|  2 | Bhargav |   25 | California |
+|  3 | Peter   |   40 | Alaska     |
+|  4 | john    |   15 | INDIA      |
++----+---------+------+------------+
+4 rows in set (0.00 sec)
+
+mysql> drop table persons;
+Query OK, 0 rows affected (1.07 sec)
+---------------------------------------------------------------
+** Primary key Constraint **
+============================
+mysql> CREATE TABLE Persons (
+    ->     ID int NOT NULL PRIMARY KEY,
+    ->     Name varchar(45) NOT NULL,
+    ->     Age int,
+    ->     City varchar(25));
+Query OK, 0 rows affected (0.56 sec)
+
+mysql> INSERT INTO Persons(Id, Name, Age, City)
+    -> VALUES (1,'kalyan', 24, 'USA') ,
+    -> (2, 'Joseph', 25, 'California'),
+    -> (3, 'Peter', 30, 'Alaska');
+Query OK, 3 rows affected (0.14 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from persons;
++----+--------+------+------------+
+| ID | Name   | Age  | City       |
++----+--------+------+------------+
+|  1 | kalyan |   24 | USA        |
+|  2 | Joseph |   25 | California |
+|  3 | Peter  |   30 | Alaska     |
++----+--------+------+------------+
+3 rows in set (0.02 sec)
+
+mysql> INSERT INTO Persons(Id, Name, Age, City)
+    -> VALUES (1,'Stephen', 15, 'Florida');
+ERROR 1062 (23000): Duplicate entry '1' for key 'persons.PRIMARY'
+---------------------------------------------------------------
+** AUTO_INCREMENT Constraint **
+============================
+mysql> CREATE TABLE Animals(
+    -> id int NOT NULL AUTO_INCREMENT,
+    -> name CHAR(45) NOT NULL,
+    -> PRIMARY KEY (id));
+Query OK, 0 rows affected (1.01 sec)
+
+mysql>  INSERT INTO Animals (name) VALUES('Tiger'),('monkey'),('cat'),('Camel'),('lion'),('dog');
+Query OK, 6 rows affected (0.21 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+mysql> select * from Animals;
++----+--------+
+| id | name   |
++----+--------+
+|  1 | Tiger  |
+|  2 | monkey |
+|  3 | cat    |
+|  4 | Camel  |
+|  5 | lion   |
+|  6 | dog    |
++----+--------+
+6 rows in set (0.00 sec)
+---------------------------------------------------------------
+** ENUM Constraint **
+============================
+mysql> CREATE TABLE Shirts (
+    ->     id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     name VARCHAR(35),
+    ->     size ENUM('small', 'medium', 'large', 'x-large')
+    -> );
+Query OK, 0 rows affected (0.44 sec)
+
+mysql>  INSERT INTO Shirts(id, name, size)
+    -> VALUES (1,'t-shirt', 'medium'),
+    -> (2, 'casual-shirt', 'small'),
+    -> (3, 'formal-shirt', 'large');
+Query OK, 3 rows affected (0.27 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>  SELECT * FROM Shirts;
++----+--------------+--------+
+| id | name         | size   |
++----+--------------+--------+
+|  1 | t-shirt      | medium |
+|  2 | casual-shirt | small  |
+|  3 | formal-shirt | large  |
++----+--------------+--------+
+3 rows in set (0.00 sec)
+
+mysql>  INSERT INTO Shirts(id, name, size)
+    -> VALUES (^Clain', 'x-large'),
+mysql>  INSERT INTO Shirts(name, size)
+    -> VALUES ('plain', 'x-large');
+Query OK, 1 row affected (0.10 sec)
+
+mysql>  SELECT * FROM Shirts;
++----+--------------+---------+
+| id | name         | size    |
++----+--------------+---------+
+|  1 | t-shirt      | medium  |
+|  2 | casual-shirt | small   |
+|  3 | formal-shirt | large   |
+|  4 | plain        | x-large |
++----+--------------+---------+
+4 rows in set (0.02 sec)
+---------------------------------------------------------------
+** INDEX Constraint **
+============================
+mysql> CREATE INDEX idx_name ON Shirts(name);
+Query OK, 0 rows affected (1.75 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Shirts USE INDEX(idx_name);
++----+--------------+---------+
+| id | name         | size    |
++----+--------------+---------+
+|  1 | t-shirt      | medium  |
+|  2 | casual-shirt | small   |
+|  3 | formal-shirt | large   |
+|  4 | plain        | x-large |
++----+--------------+---------+
+4 rows in set (0.00 sec)
+---------------------------------------------------------------
+** Foreign Key Constraint **
+============================
+mysql>  select * from persons;
++-----------+---------+------+------------+
+| Person_ID | Name    | Age  | City       |
++-----------+---------+------+------------+
+|         1 | kalyan  |   24 | USA        |
+|         2 | Bhargav |   25 | California |
+|         3 | Peter   |   40 | Alaska     |
++-----------+---------+------+------------+
+3 rows in set (0.02 sec)
+
+mysql> CREATE TABLE Orders (
+    ->     Order_ID int NOT NULL PRIMARY KEY,
+    ->     Order_Num int NOT NULL,
+    ->     Person_ID int,
+    ->     FOREIGN KEY (Person_ID) REFERENCES Persons(Person_ID)
+    -> );
+Query OK, 0 rows affected (2.04 sec)
+mysql> INSERT INTO orders(Order_ID,order_num,person_id)
+    -> values(1,1111,2),
+    -> (2,2222,1),
+    -> (3,3333,3),
+    -> (4,4444,2),
+    -> (5,5555,1);
+Query OK, 5 rows affected (0.15 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>  select * from orders;
++----------+-----------+-----------+
+| Order_ID | Order_Num | Person_ID |
++----------+-----------+-----------+
+|        1 |      1111 |         2 |
+|        2 |      2222 |         1 |
+|        3 |      3333 |         3 |
+|        4 |      4444 |         2 |
+|        5 |      5555 |         1 |
++----------+-----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from animals;
++----+--------+
+| id | name   |
++----+--------+
+|  1 | Tiger  |
+|  2 | monkey |
+|  3 | cat    |
+|  4 | Camel  |
+|  5 | lion   |
+|  6 | dog    |
++----+--------+
+6 rows in set (0.02 sec)
+---------------------------------------------------------------
+** By using DELETE statement **
+============================
+mysql> delete from animals where id = 2;
+Query OK, 1 row affected (0.12 sec)
+
+mysql> select * from animals;
++----+-------+
+| id | name  |
++----+-------+
+|  1 | Tiger |
+|  3 | cat   |
+|  4 | Camel |
+|  5 | lion  |
+|  6 | dog   |
++----+-------+
+5 rows in set (0.00 sec)
+---------------------------------------------------------------
+** By using DELETE and LIMIT Clause **
+=======================================
+
+mysql> DELETE FROM animals ORDER BY name LIMIT 3;
+Query OK, 3 rows affected (0.22 sec)
+
+mysql> select * from animals;
++----+-------+
+| id | name  |
++----+-------+
+|  1 | Tiger |
+|  5 | lion  |
++----+-------+
+2 rows in set (0.00 sec)
+---------------------------------------------------------------
+** By using SELECT statement **
+=======================================
+mysql> SELECT Name FROM persons;
++---------+
+| Name    |
++---------+
+| kalyan  |
+| Bhargav |
+| Peter   |
++---------+
+3 rows in set (0.02 sec)
+
+mysql> SELECT Name,city FROM persons;
++---------+------------+
+| Name    | city       |
++---------+------------+
+| kalyan  | USA        |
+| Bhargav | California |
+| Peter   | Alaska     |
++---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from persons;
++-----------+---------+------+------------+
+| Person_ID | Name    | Age  | City       |
++-----------+---------+------+------------+
+|         1 | kalyan  |   24 | USA        |
+|         2 | Bhargav |   25 | California |
+|         3 | Peter   |   40 | Alaska     |
++-----------+---------+------+------------+
+3 rows in set (0.00 sec)

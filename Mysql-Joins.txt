@@ -1,0 +1,70 @@
+** By using Mysql-Joins (INNER JOIn, LEFT JOIN,RIGHT JOIN , FULL OUTER JOIN) **
+================================================================================
+mysql> select * from orders;
++----------+-----------+-----------+
+| Order_ID | Order_Num | Person_ID |
++----------+-----------+-----------+
+|        1 |      1111 |         2 |
+|        2 |      2222 |         1 |
+|        3 |      3333 |         3 |
+|        4 |      4444 |         2 |
+|        5 |      5555 |         1 |
++----------+-----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from persons;
++-----------+---------+------+------------+
+| Person_ID | Name    | Age  | City       |
++-----------+---------+------+------------+
+|         1 | kalyan  |   24 | USA        |
+|         2 | Bhargav |   25 | California |
+|         3 | Peter   |   40 | Alaska     |
++-----------+---------+------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select orders.order_ID,orders.order_num,persons.name,persons.age,persons.city from orders
+    -> inner join persons ON orders.order_id = persons.person_id;
++----------+-----------+---------+------+------------+
+| order_ID | order_num | name    | age  | city       |
++----------+-----------+---------+------+------------+
+|        1 |      1111 | kalyan  |   24 | USA        |
+|        2 |      2222 | Bhargav |   25 | California |
+|        3 |      3333 | Peter   |   40 | Alaska     |
++----------+-----------+---------+------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select orders.order_ID,orders.order_num,persons.name,persons.age,persons.city from orders
+    -> left join persons ON orders.order_id = persons.person_id;
++----------+-----------+---------+------+------------+
+| order_ID | order_num | name    | age  | city       |
++----------+-----------+---------+------+------------+
+|        1 |      1111 | kalyan  |   24 | USA        |
+|        2 |      2222 | Bhargav |   25 | California |
+|        3 |      3333 | Peter   |   40 | Alaska     |
+|        4 |      4444 | NULL    | NULL | NULL       |
+|        5 |      5555 | NULL    | NULL | NULL       |
++----------+-----------+---------+------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select orders.order_ID,orders.order_num,persons.name,persons.age,persons.city from orders
+    -> right join persons ON orders.order_id = persons.person_id;
++----------+-----------+---------+------+------------+
+| order_ID | order_num | name    | age  | city       |
++----------+-----------+---------+------+------------+
+|        1 |      1111 | kalyan  |   24 | USA        |
+|        2 |      2222 | Bhargav |   25 | California |
+|        3 |      3333 | Peter   |   40 | Alaska     |
++----------+-----------+---------+------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from orders left join persons ON orders.order_id = persons.person_id UNION select * from orders right join persons ON orders.order_id = persons.person_id;
++----------+-----------+-----------+-----------+---------+------+------------+
+| Order_ID | Order_Num | Person_ID | Person_ID | Name    | Age  | City       |
++----------+-----------+-----------+-----------+---------+------+------------+
+|        1 |      1111 |         2 |         1 | kalyan  |   24 | USA        |
+|        2 |      2222 |         1 |         2 | Bhargav |   25 | California |
+|        3 |      3333 |         3 |         3 | Peter   |   40 | Alaska     |
+|        4 |      4444 |         2 |      NULL | NULL    | NULL | NULL       |
+|        5 |      5555 |         1 |      NULL | NULL    | NULL | NULL       |
++----------+-----------+-----------+-----------+---------+------+------------+
+5 rows in set (0.03 sec)

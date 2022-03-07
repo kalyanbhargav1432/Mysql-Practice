@@ -1,0 +1,72 @@
+** MYSQL-Transaction - START,INSERT,UPDATE,ROLLBACK,COMMIT **
+==============================================================
+
+-> use employee_database;
+ 
+-> select * from persons;
+ 
+-> start transaction ; 
+-> insert into persons values(6, 'Dhoni',40,'INDIA');
+
+-> update persons set age = 30 where Person_id = 3;
+
+-> rollback;
+
+-> commit;
+
+
+
+** MYSQL-Transaction - DELETE **
+================================
+
+-> select * from persons;
+
+-> start transaction; 
+
+-> delete from persons where person_id =5;
+
+-> rollback; 
+
+-> commit;
+
+
+
+** MYSQL-Transaction - SAVEPOINT, ROLLBACK TO SAVAPOINT**
+==========================================================
+
+-> select * from persons;
+ 
+-> start transaction;
+
+-> insert into persons values(7, 'raina',36,'INDIA');
+ 
+-> savepoint my_record;
+-> 
+insert into persons values(8, 'Don',40,'INDIA');
+->
+ select * from persons;
+
+-> rollback to savepoint my_record;
+-> rollback;
+
+-> commit;
+
+
+
+-> select * from persons;
+
+-> start transaction;
+-> 
+
+insert into persons values(8, 'Dhoni',40,'INDIA');
+ 
+-> savepoint my_savedata;
+ 
+->
+ insert into persons values(9, 'Durga',22,'USA');
+ 
+-> rollback to savepoint my_savedata;
+  
+-> rollback;
+ 
+-> commit;
